@@ -275,14 +275,14 @@ class TickerBase():
 
         if self._fundamentals:
             return
-
+        
+        ticker_url = "{}/{}".format(self._scrape_url, self.ticker)
+        
         # get info and sustainability
-        url = '%s/%s' % (self._scrape_url, self.ticker)
-        data = utils.get_json(url, proxy)
+        data = utils.get_json(ticker_url, proxy)
 
         # holders
-        url = "{}/{}/holders".format(self._scrape_url, self.ticker)
-        holders = _pd.read_html(url)
+        holders = _pd.read_html(ticker_url+'/holders')
         
         if len(holders)>=3:
             self._major_holders = holders[0]
@@ -373,8 +373,8 @@ class TickerBase():
             pass
 
         # get fundamentals
-        data = utils.get_json(url+'/financials', proxy)
-
+        data = utils.get_json(ticker_url+'/financials', proxy)
+        
         # generic patterns
         for key in (
             (self._cashflow, 'cashflowStatement', 'cashflowStatements'),
